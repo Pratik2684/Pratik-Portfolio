@@ -1,0 +1,11 @@
+const header=document.querySelector('.site-header'),progress=document.getElementById('progress'),menuToggle=document.getElementById('menuToggle'),navLinks=document.getElementById('navLinks'),navItems=document.querySelectorAll('.nav-link'),sections=[...document.querySelectorAll('main section[id]')];
+function update(){const top=window.scrollY,doc=document.documentElement.scrollHeight-window.innerHeight;progress.style.width=`${doc>0?top/doc*100:0}%`;header.classList.toggle('scrolled',top>15);let current='home';sections.forEach(s=>{if(top>=s.offsetTop-150)current=s.id});navItems.forEach(n=>n.classList.toggle('active',n.getAttribute('href')===`#${current}`))}
+window.addEventListener('scroll',update,{passive:true});update();
+menuToggle.addEventListener('click',()=>{const open=navLinks.classList.toggle('open');menuToggle.setAttribute('aria-expanded',String(open))});
+navItems.forEach(n=>n.addEventListener('click',()=>{navLinks.classList.remove('open');menuToggle.setAttribute('aria-expanded','false')}));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e));
+const modal=document.getElementById('certificateModal'),img=document.getElementById('certificateImage');
+document.querySelectorAll('[data-certificate]').forEach(b=>b.addEventListener('click',()=>{img.src=b.dataset.certificate;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}));
+function closeModal(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');img.src='';document.body.style.overflow=''}
+document.querySelectorAll('[data-close-modal]').forEach(e=>e.addEventListener('click',closeModal));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal()});
+document.getElementById('year').textContent=new Date().getFullYear();
